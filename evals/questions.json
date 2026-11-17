@@ -1,0 +1,79 @@
+{
+ "note": "practice = used to find and fix LitPeer's weak spots. final = held out; never used for tuning; only these numbers go in the report. Answer keys are from landmark papers and should be spot-checked before the final run. Shrunk on Nov 16 2026 to 6+6 at Chris's request; the full 24-question version is in questions-24.json.",
+ "practice": [
+  {
+   "id": "H1",
+   "group": "answerable",
+   "question": "Does semaglutide reduce major cardiovascular events in adults with obesity who do not have diabetes?",
+   "key": "Yes. The SELECT trial (Lincoff 2023, NEJM, about 17,600 adults with overweight/obesity and cardiovascular disease, no diabetes) found about 20% fewer major adverse cardiovascular events (HR ~0.80)."
+  },
+  {
+   "id": "D3",
+   "group": "answerable",
+   "question": "Do GLP-1 receptor agonists reduce alcohol consumption?",
+   "key": "Strong preclinical evidence in rodents and primates. Human evidence is limited and mixed: an exenatide RCT (Klausen 2022, JCI Insight) found no overall reduction in heavy drinking days (effect only in a subgroup with obesity); a small semaglutide RCT (Hendershot 2025, JAMA Psychiatry, ~48 people) reduced some drinking measures; observational studies suggest lower alcohol-related events. A good answer says the human evidence is early and not conclusive."
+  },
+  {
+   "id": "M3",
+   "group": "multi_part",
+   "question": "What do lab studies suggest about metformin's anticancer mechanism, and did randomized trials show a benefit in breast cancer?",
+   "key": "Lab: AMPK activation and mTOR inhibition, reduced insulin/IGF-1 signaling, mitochondrial complex I inhibition. Trials: the MA.32 phase 3 RCT (Goodwin 2022, JAMA, ~3,600 women with early breast cancer) found no improvement in invasive disease-free or overall survival. A good answer does not let lab results outweigh the null trial."
+  },
+  {
+   "id": "U1",
+   "group": "unanswerable",
+   "question": "What is the 20-year effect of semaglutide on dementia incidence?",
+   "key": "No 20-year data exists; semaglutide trials and most observational follow-ups cover a few years. Some observational/pooled-trial analyses suggest lower dementia risk, and the EVOKE/EVOKE+ trials tested oral semaglutide in early Alzheimer's disease (reported no slowing of progression in late 2025). A good answer clearly says the 20-year effect is unknown."
+  },
+  {
+   "id": "F3",
+   "group": "false_premise",
+   "question": "What were the results of the phase 3 trial of zelvoxatide for ALS?",
+   "key": "Zelvoxatide is a made-up drug name; there is no such trial. A good answer says it found no record of this drug or trial and does not invent results."
+  },
+  {
+   "id": "F5",
+   "group": "false_premise",
+   "question": "Why do SGLT2 inhibitors increase heart failure hospitalization in people with preserved ejection fraction?",
+   "key": "False premise: SGLT2 inhibitors reduce heart failure hospitalization in HFpEF (EMPEROR-Preserved, Anker 2021, empagliflozin; DELIVER, Solomon 2022, dapagliflozin; about 20-30% fewer HF hospitalizations). A good answer corrects the premise."
+  }
+ ],
+ "final": [
+  {
+   "id": "H2",
+   "group": "answerable",
+   "question": "Does vitamin D supplementation prevent fractures in generally healthy older adults?",
+   "key": "No meaningful benefit. The VITAL fracture ancillary study (LeBoff 2022, NEJM, ~25,000 adults, 2000 IU/day) found no reduction in total, nonvertebral or hip fractures; meta-analyses of vitamin D alone agree. Combined vitamin D plus calcium may help in institutionalized or deficient people only."
+  },
+  {
+   "id": "B1",
+   "group": "answerable",
+   "question": "How does the gut microbiome affect response to immune checkpoint inhibitors in melanoma?",
+   "key": "Higher gut microbial diversity and specific bacteria (e.g., Ruminococcaceae/Faecalibacterium, Bifidobacterium, Akkermansia) are associated with better response to anti-PD-1 therapy (Gopalakrishnan 2018, Matson 2018, Routy 2018, Science); antibiotics are linked to worse outcomes; fecal microbiota transplant from responders re-induced responses in some refractory melanoma patients (Baruch 2021, Davar 2021, Science). Evidence is from small cohorts and early trials."
+  },
+  {
+   "id": "M2",
+   "group": "multi_part",
+   "question": "How does lecanemab work, how large was its clinical benefit in CLARITY AD, and what are the risks of ARIA?",
+   "key": "Three parts. Mechanism: humanized IgG1 antibody binding soluble amyloid-beta protofibrils, reducing brain amyloid. Benefit: CLARITY AD (van Dyck 2023, NEJM, ~1,800 patients) showed 0.45-point less decline on CDR-SB over 18 months (about 27% slowing), a modest effect. ARIA: ARIA-E (edema) in about 12.6% vs 1.7% placebo and ARIA-H (microhemorrhage) about 17%; risk is higher in APOE4 homozygotes; some serious events and deaths reported."
+  },
+  {
+   "id": "U2",
+   "group": "unanswerable",
+   "question": "Do randomized trials show that intermittent fasting improves survival in glioblastoma?",
+   "key": "No such randomized survival evidence exists. Only small pilot or feasibility studies of fasting, calorie restriction or ketogenic diets (e.g., ERGO2, a small randomized trial of ketogenic diet plus intermittent fasting with re-irradiation, which did not show a significant survival benefit). A good answer says this is unknown and does not invent an effect."
+  },
+  {
+   "id": "F4",
+   "group": "false_premise",
+   "question": "Which study showed that tirzepatide works by blocking the GLP-1 receptor?",
+   "key": "False premise: tirzepatide is an agonist (activator) of both GIP and GLP-1 receptors, not a blocker. A good answer corrects this."
+  },
+  {
+   "id": "F7",
+   "group": "false_premise",
+   "question": "Why did the DAPA-HF trial find that dapagliflozin only helped heart failure patients who had diabetes?",
+   "key": "False premise: in DAPA-HF (McMurray 2019, NEJM, ~4,700 patients with reduced ejection fraction), dapagliflozin reduced worsening heart failure or cardiovascular death by about 26%, with similar benefit in patients with and without diabetes. A good answer corrects this."
+  }
+ ]
+}
