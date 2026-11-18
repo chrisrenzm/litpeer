@@ -39,3 +39,14 @@ npm run dev                  # open http://localhost:3000
 
 Import the folder as a Next.js project and add `DEEPSEEK_API_KEY` under Project → Settings → Environment Variables.
 The API route sets `maxDuration = 300`; a full run takes about 1–3 minutes.
+
+## Password gate (deployed site)
+
+The whole site sits behind one shared password. `middleware.js` checks an HttpOnly cookie
+(an HMAC of the password, set by `/api/login`) on every page and API call and sends anyone
+without it to `/login`. Set these in Vercel → Project → Settings → Environment Variables:
+
+- `DEEPSEEK_API_KEY` – server-side only, never sent to the browser
+- `SITE_PASSWORD` – the shared password. Changing it signs everyone out.
+
+Without `SITE_PASSWORD` the deployed site refuses all requests; in `npm run dev` it is open.
