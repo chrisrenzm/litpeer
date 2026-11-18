@@ -81,8 +81,20 @@ export function sample(items, n, seed = 1) {
   return out;
 }
 
+// PubMedQA (Jin et al. 2019, MIT licence): yes/no/maybe questions written from PubMed article
+// titles; the label is the conclusion of that article's abstract. We use the official 500-question
+// test split WITHOUT giving the abstract, so each system has to find the evidence itself.
+// Free on GitHub: `node bench/fetch-pubmedqa.mjs`.
+export function loadPubMedQA() {
+  const file = path.join(DATA_DIR, "pubmedqa.json");
+  if (!fs.existsSync(file)) throw new Error(`Missing ${file}. Run: node bench/fetch-pubmedqa.mjs`);
+  const { questions, test } = JSON.parse(fs.readFileSync(file, "utf8"));
+  return Object.keys(test).map((pmid) => ({ id: pmid, bench: "pubmedqa", type: "ynm", question: questions[pmid].QUESTION, gold: test[pmid], sourcePmid: pmid, year: questions[pmid].YEAR }));
+}
+
 export function loadBench(name) {
+  if (name === "pubmedqa") return loadPubMedQA();
   if (name === "litqa2") return loadLitQA2();
   if (name === "bioasq") return loadBioASQ();
-  throw new Error(`Unknown benchmark ${name} (use litqa2 or bioasq)`);
+  throw new Error(`Unknown benchmark ${name} (use litqa2, pubmedqa or bioasq)`);
 }

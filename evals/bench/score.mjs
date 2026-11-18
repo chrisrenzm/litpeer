@@ -24,6 +24,16 @@ export async function extract(item, answerText) {
     const letter = String(out.letter || "").trim().toUpperCase().slice(0, 1);
     return { letter: item.letters.includes(letter) ? letter : item.letters.at(-1) };
   }
+  if (item.type === "ynm") {
+    const out = await chatJSON({
+      system: `You read a research assistant's answer to a yes/no research question and record its conclusion. ${RULE} "yes" or "no" if the answer clearly concludes that way; "maybe" if it says the evidence is mixed, inconclusive, or only partly supports it; "maybe" too if it says it found no evidence. Reply in JSON: {"verdict":"yes" | "no" | "maybe"}`,
+      user: `Question: ${item.question}\n\nAssistant's answer:\n${answer}`,
+      temperature: 0,
+      maxTokens: 30,
+    });
+    const v = String(out.verdict).toLowerCase();
+    return { verdict: ["yes", "no", "maybe"].includes(v) ? v : "maybe" };
+  }
   if (item.type === "yesno") {
     const out = await chatJSON({
       system: `You read a research assistant's answer to a yes/no question and record its verdict. ${RULE} Reply in JSON: {"verdict":"yes" | "no" | "unclear"}`,
@@ -52,6 +62,7 @@ export function score(item, ext) {
     const answered = ext.letter !== item.letters.at(-1);
     return { correct: ext.letter === item.correct ? 1 : 0, answered: answered ? 1 : 0 };
   }
+  if (item.type === "ynm") return { correct: ext.verdict === item.gold ? 1 : 0, answered: 1, source_cited: ext.source_cited ?? null };
   if (item.type === "yesno") return { correct: ext.verdict === item.gold ? 1 : 0, answered: ext.verdict === "unclear" ? 0 : 1 };
   if (item.type === "factoid") {
     const rank = ext.entities.findIndex((e) => item.gold.some((g) => same(e, g)));

@@ -7,6 +7,7 @@ Runs LitPeer and the two baselines (`llm_only` = DeepSeek alone, `rag_simple` = 
 | Benchmark | What it is | How to get it |
 | --- | --- | --- |
 | LitQA2 (FutureHouse LAB-Bench) | 199 public multiple-choice questions; each answer is in one recent paper, often only in the full text. Every question has an "Insufficient information" option. | Free, no account: `node bench/fetch-litqa2.mjs` |
+| PubMedQA | Yes/no/maybe questions written from PubMed article titles; the label is that article's conclusion. We use the official 500-question test split without giving the abstract, so each system must find the evidence. | Free, no account: `node bench/fetch-pubmedqa.mjs` |
 | BioASQ Task B | Biomedical questions written by experts over PubMed: yes/no, factoid, list (summary questions are skipped; they would need a judge). | Free, but needs an account. Register at https://participants-area.bioasq.org, download the Task B training set (e.g. `training13b.json`), save it as `evals/bench/data/bioasq.json`. |
 
 `bench/data/` is git-ignored. LitQA2 asks that it never be put where it can end up in training data, and BioASQ's terms don't allow redistribution, so neither is committed.
@@ -26,6 +27,7 @@ Options: `--seed` (sample and option order are reproducible), `--systems litpeer
 ## Metrics
 
 - LitQA2: accuracy (correct / all) and precision (correct / questions where the system did not pick "insufficient"), as in LAB-Bench.
+- PubMedQA: accuracy over yes/no/maybe, plus how often the system cited the question's source paper.
 - BioASQ yes/no: accuracy. Factoid: strict accuracy (top answer), lenient accuracy (any of top 5), MRR. List: precision, recall, F1. Matching is on normalized strings against BioASQ's synonym lists.
 
 ## Files

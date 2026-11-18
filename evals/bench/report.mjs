@@ -24,7 +24,7 @@ for (const s of systems) for (const t of types) {
   const sc = rs.map((r) => r.score);
   const correct = mean(sc.map((x) => x.correct ?? x.f1));
   const answered = mean(sc.map((x) => x.answered));
-  const extra = t === "factoid" ? `lenient ${pct(mean(sc.map((x) => x.lenient)))}, MRR ${mean(sc.map((x) => x.mrr)).toFixed(2)}` : t === "list" ? `P ${pct(mean(sc.map((x) => x.precision)))}, R ${pct(mean(sc.map((x) => x.recall)))} (Correct = F1)` : "";
+  const extra = t === "ynm" ? `source paper cited ${pct(mean(sc.map((x) => x.source_cited ?? 0)))}` : t === "factoid" ? `lenient ${pct(mean(sc.map((x) => x.lenient)))}, MRR ${mean(sc.map((x) => x.mrr)).toFixed(2)}` : t === "list" ? `P ${pct(mean(sc.map((x) => x.precision)))}, R ${pct(mean(sc.map((x) => x.recall)))} (Correct = F1)` : "";
   const answeredRecs = sc.filter((x) => x.answered);
   const prec = t === "list" ? "–" : pct(answeredRecs.length ? mean(answeredRecs.map((x) => x.correct)) : NaN);
   lines.push(`| ${s} | ${t} | ${rs.length} | ${pct(correct)} | ${pct(answered)} | ${prec} | ${extra} |`);
