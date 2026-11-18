@@ -247,3 +247,14 @@ button { font: inherit; color: inherit; }
   .ghost { padding: 5px 8px; }
   .prose { font-size: 16px; }
 }
+
+/* Password gate */
+.gate { min-height: 100vh; display: grid; place-items: center; padding: 16px; background: var(--bg); }
+.gatecard { width: 100%; max-width: 380px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px 28px; box-shadow: 0 4px 24px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 14px; }
+.gatebrand { font-family: var(--serif); font-size: 30px; font-weight: 600; text-align: center; }
+.gatesub { margin: 0 0 4px; color: var(--muted); font-size: 14px; text-align: center; }
+.gateinput { font: inherit; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); outline: none; }
+.gateinput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.gateerr { color: var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+.gatebtn { font: inherit; font-weight: 600; padding: 11px; border: 0; border-radius: 10px; background: var(--accent); color: white; cursor: pointer; }
+.gatebtn:disabled { opacity: 0.55; cursor: default; }
