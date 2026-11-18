@@ -8,6 +8,7 @@ Runs LitPeer and the two baselines (`llm_only` = DeepSeek alone, `rag_simple` = 
 | --- | --- | --- |
 | LitQA2 (FutureHouse LAB-Bench) | 199 public multiple-choice questions; each answer is in one recent paper, often only in the full text. Every question has an "Insufficient information" option. | Free, no account: `node bench/fetch-litqa2.mjs` |
 | PubMedQA | Yes/no/maybe questions written from PubMed article titles; the label is that article's conclusion. We use the official 500-question test split without giving the abstract, so each system must find the evidence. | Free, no account: `node bench/fetch-pubmedqa.mjs` |
+| MedREQAL | Questions generated from Cochrane systematic reviews; gold = the review's verdict (supported / refuted / not enough information). 78% are "not enough information", so samples are balanced across verdicts. | Free, no account: `node bench/fetch-medreqal.mjs` |
 | BioASQ Task B | Biomedical questions written by experts over PubMed: yes/no, factoid, list (summary questions are skipped; they would need a judge). | Free, but needs an account. Register at https://participants-area.bioasq.org, download the Task B training set (e.g. `training13b.json`), save it as `evals/bench/data/bioasq.json`. |
 
 `bench/data/` is git-ignored. LitQA2 asks that it never be put where it can end up in training data, and BioASQ's terms don't allow redistribution, so neither is committed.
@@ -28,6 +29,7 @@ Options: `--seed` (sample and option order are reproducible), `--systems litpeer
 
 - LitQA2: accuracy (correct / all) and precision (correct / questions where the system did not pick "insufficient"), as in LAB-Bench.
 - PubMedQA: accuracy over yes/no/maybe, plus how often the system cited the question's source paper.
+- MedREQAL: accuracy and macro-F1 over the three verdicts, plus how often a Cochrane review was cited.
 - BioASQ yes/no: accuracy. Factoid: strict accuracy (top answer), lenient accuracy (any of top 5), MRR. List: precision, recall, F1. Matching is on normalized strings against BioASQ's synonym lists.
 
 ## Files

@@ -24,6 +24,20 @@ export async function extract(item, answerText) {
     const letter = String(out.letter || "").trim().toUpperCase().slice(0, 1);
     return { letter: item.letters.includes(letter) ? letter : item.letters.at(-1) };
   }
+  if (item.bench === "medreqal") {
+    const out = await chatJSON({
+      system: `You read a research assistant's answer to a clinical research question and record its overall verdict. ${RULE}
+- "supported": the answer concludes the evidence shows YES (the intervention works / the claim holds), not just "might" or "some studies suggest".
+- "refuted": the answer concludes the evidence shows NO (no benefit, no effect, or harm).
+- "nei": the answer says the evidence is insufficient, low quality, too uncertain, mixed or inconclusive to say.
+Reply in JSON: {"verdict":"supported" | "refuted" | "nei"}`,
+      user: `Question: ${item.question}\n\nAssistant's answer:\n${answer}`,
+      temperature: 0,
+      maxTokens: 30,
+    });
+    const v = String(out.verdict).toLowerCase();
+    return { verdict: ["supported", "refuted", "nei"].includes(v) ? v : "nei" };
+  }
   if (item.type === "ynm") {
     const out = await chatJSON({
       system: `You read a research assistant's answer to a yes/no research question and record its conclusion. ${RULE} "yes" or "no" if the answer clearly concludes that way; "maybe" if it says the evidence is mixed, inconclusive, or only partly supports it; "maybe" too if it says it found no evidence. Reply in JSON: {"verdict":"yes" | "no" | "maybe"}`,
@@ -62,6 +76,7 @@ export function score(item, ext) {
     const answered = ext.letter !== item.letters.at(-1);
     return { correct: ext.letter === item.correct ? 1 : 0, answered: answered ? 1 : 0 };
   }
+  if (item.bench === "medreqal") return { correct: ext.verdict === item.gold ? 1 : 0, answered: ext.verdict === "nei" ? 0 : 1, verdict: ext.verdict, cochrane_cited: ext.cochrane_cited ?? 0 };
   if (item.type === "ynm") return { correct: ext.verdict === item.gold ? 1 : 0, answered: 1, source_cited: ext.source_cited ?? null };
   if (item.type === "yesno") return { correct: ext.verdict === item.gold ? 1 : 0, answered: ext.verdict === "unclear" ? 0 : 1 };
   if (item.type === "factoid") {

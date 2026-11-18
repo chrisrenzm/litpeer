@@ -42,8 +42,10 @@ async function worker() {
       const seconds = Math.round((Date.now() - t0) / 1000);
       const ex = await trackUsage(() => extract(j.it, sys.result.text));
       const pmids = sys.result.references.map((r) => r.pmid).filter(Boolean).map(String);
+      const journals = sys.result.references.map((r) => String(r.journal || ""));
+      ex.result.cochrane_cited = journals.some((jn) => /cochrane/i.test(jn)) ? 1 : 0;
       if (j.it.sourcePmid) ex.result.source_cited = pmids.includes(String(j.it.sourcePmid)) ? 1 : 0;
-      const rec = { system: j.s, id: j.it.id, bench, type: j.it.type, run: j.r, question: promptFor(j.it), seconds, answer: sys.result.text, references: sys.result.references.length, pmids, extracted: ex.result, gold: j.it.correct ?? j.it.gold, score: score(j.it, ex.result), usage: { system: sys.usage, extract: ex.usage } };
+      const rec = { system: j.s, id: j.it.id, bench, type: j.it.type, run: j.r, question: promptFor(j.it), seconds, answer: sys.result.text, references: sys.result.references.length, pmids, journals, extracted: ex.result, gold: j.it.correct ?? j.it.gold, score: score(j.it, ex.result), usage: { system: sys.usage, extract: ex.usage } };
       fs.writeFileSync(file(j), JSON.stringify(rec, null, 1));
       console.log(`[${++done}/${todo.length}] ${j.s} ${j.it.id} ${seconds}s ${JSON.stringify(rec.score)} ${sys.usage.calls} calls`);
     } catch (err) {

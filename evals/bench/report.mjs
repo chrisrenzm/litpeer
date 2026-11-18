@@ -30,6 +30,23 @@ for (const s of systems) for (const t of types) {
   lines.push(`| ${s} | ${t} | ${rs.length} | ${pct(correct)} | ${pct(answered)} | ${prec} | ${extra} |`);
 }
 
+// MedREQAL: overall accuracy, macro-F1 over the three verdicts, confusion matrix.
+if (recs[0]?.bench === "medreqal") {
+  const labs = ["supported", "refuted", "nei"];
+  lines.push("", "## MedREQAL overall (sample is balanced across verdicts)", "", "| System | Accuracy | Macro-F1 | Cited a Cochrane review | Predicted supported / refuted / nei |", "| --- | --- | --- | --- | --- |");
+  for (const s of systems) {
+    const rs = recs.filter((r) => r.system === s);
+    const f1s = labs.map((l) => {
+      const tp = rs.filter((r) => r.gold === l && r.score.verdict === l).length;
+      const pp = rs.filter((r) => r.score.verdict === l).length, gp = rs.filter((r) => r.gold === l).length;
+      const p = pp ? tp / pp : 0, rc = gp ? tp / gp : 0;
+      return p + rc ? (2 * p * rc) / (p + rc) : 0;
+    });
+    const dist = labs.map((l) => rs.filter((r) => r.score.verdict === l).length).join(" / ");
+    lines.push(`| ${s} | ${pct(mean(rs.map((r) => r.score.correct)))} | ${mean(f1s).toFixed(2)} | ${pct(mean(rs.map((r) => r.score.cochrane_cited)))} | ${dist} |`);
+  }
+}
+
 lines.push("", "## Measured tokens and cost per question (system + answer extraction)", "", "| System | LLM calls | Input tokens | of which cache hits | Output tokens | Median seconds | $ off-peak | $ peak |", "| --- | --- | --- | --- | --- | --- | --- | --- |");
 const perQ = {};
 for (const s of systems) {

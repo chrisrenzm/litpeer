@@ -92,9 +92,35 @@ export function loadPubMedQA() {
   return Object.keys(test).map((pmid) => ({ id: pmid, bench: "pubmedqa", type: "ynm", question: questions[pmid].QUESTION, gold: test[pmid], sourcePmid: pmid, year: questions[pmid].YEAR }));
 }
 
+// MedREQAL (Vladika et al., ACL Findings 2024): questions generated from Cochrane systematic
+// reviews; the gold answer is the review's verdict: supported / refuted / not enough information.
+// Free on GitHub: `node bench/fetch-medreqal.mjs`. 78% of items are "not enough information",
+// so samples are stratified by verdict (equal share of each) and report.mjs gives macro-F1.
+function parseCSV(text) {
+  const rows = []; let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(f); rows.push(row); row = []; f = ""; }
+    else f += c;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  const [head, ...body] = rows;
+  return body.filter((r) => r.length === head.length).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i]])));
+}
+export const MEDREQAL_LABELS = { 0: "supported", 1: "nei", 2: "refuted" };
+export function loadMedREQAL() {
+  const file = path.join(DATA_DIR, "medreqal.csv");
+  if (!fs.existsSync(file)) throw new Error(`Missing ${file}. Run: node bench/fetch-medreqal.mjs`);
+  return parseCSV(fs.readFileSync(file, "utf8")).map((r) => ({ id: `mrq${r[""]}`, bench: "medreqal", type: MEDREQAL_LABELS[r.label], question: r.question, gold: MEDREQAL_LABELS[r.label], strength: r.strength.trim(), category: r.category }));
+}
+
 export function loadBench(name) {
+  if (name === "medreqal") return loadMedREQAL();
   if (name === "pubmedqa") return loadPubMedQA();
   if (name === "litqa2") return loadLitQA2();
   if (name === "bioasq") return loadBioASQ();
-  throw new Error(`Unknown benchmark ${name} (use litqa2, pubmedqa or bioasq)`);
+  throw new Error(`Unknown benchmark ${name} (use litqa2, pubmedqa, medreqal or bioasq)`);
 }
